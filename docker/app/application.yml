@@ -1,8 +1,11 @@
 spring:
   jpa:
     database: POSTGRESQL
+    hibernate:
+      ddl-auto: create
   datasource:
     platform: postgres
-    url: jdbc:postgresql://localhost:5432/postgres
+    url: jdbc:postgresql://testexample-db:5432/postgres
     username: postgres
     password: mysecretpassword
+    
