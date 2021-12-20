@@ -1,12 +1,14 @@
 package pl.poznan.put.cs.net.testexample.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,6 +33,16 @@ public class DistributionServiceController {
 	@GetMapping
 	public ResponseEntity<List<DistributionService>> getAllServices() {
 		return ResponseEntity.ok(distributionServiceRepository.findAll());
+	}
+	
+	@GetMapping("/{id}")
+	public ResponseEntity<DistributionService> getService(@PathVariable String id) {
+		Optional<DistributionService> srv = distributionServiceRepository.findById(id);
+		
+		if(srv.isEmpty())
+			return ResponseEntity.notFound().build();
+		
+		return ResponseEntity.ok(srv.get());
 	}
 	
 	@PostMapping

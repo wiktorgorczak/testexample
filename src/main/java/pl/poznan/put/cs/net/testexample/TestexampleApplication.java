@@ -2,17 +2,12 @@ package pl.poznan.put.cs.net.testexample;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ApplicationContext;
 
 @SpringBootApplication
 public class TestexampleApplication {
 
 	public static void main(String[] args) {
-		ApplicationContext context = SpringApplication.run(TestexampleApplication.class, args);
-		System.out.println("Beans: ");
-		if(context.containsBean("uniqueDistributionServiceTitleValidator")) {
-			System.out.println("Gituwa");
-		}
+		SpringApplication.run(TestexampleApplication.class, args);
 	}
 
 }

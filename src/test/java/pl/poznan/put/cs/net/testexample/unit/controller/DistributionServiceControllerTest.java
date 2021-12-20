@@ -1,5 +1,7 @@
 package pl.poznan.put.cs.net.testexample.unit.controller;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -10,9 +12,12 @@ import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -24,6 +29,7 @@ import pl.poznan.put.cs.net.testexample.repository.DistributionServiceRepository
 @WebMvcTest(DistributionServiceController.class)
 @ContextConfiguration
 public class DistributionServiceControllerTest {
+	
 	@Autowired
 	MockMvc mockMvc;
 	
@@ -65,7 +71,44 @@ public class DistributionServiceControllerTest {
 		.perform(MockMvcRequestBuilders.get("/api/distribution-services/123"))
 		.andExpect(status().isNotFound());
 		
-		//verify is essential here!
-//		verify(distributionServiceRepository, times(1)).findById("123");
+//		verify is essential here!
+		verify(distributionServiceRepository, times(1)).findById("123");
+	}
+	
+	@Test
+	public void addDistributionService() throws Exception {
+		final String JSON = "{"
+				+ "\"title\": \"Steam\""
+				+ "}";
+		final String ID = "abc123";
+		final String expectedJSON = "{"
+				+ "\"id\": \"abc123\""
+				+ "\"title\": \"Steam\""
+				+ "}";
+		
+		when(distributionServiceRepository.save(any())).thenAnswer(new Answer<DistributionService>() {
+
+			@Override
+			public DistributionService answer(InvocationOnMock invocation) throws Throwable {
+				DistributionService ds = invocation.getArgument(0);
+				
+				ds.setId(ID);
+				return ds;
+			}
+		});
+		
+		String resultURL = mockMvc.perform(MockMvcRequestBuilders
+				.post("/api/distribution-services")
+				.content(JSON)
+				.contentType(MediaType.APPLICATION_JSON))
+			.andExpect(
+				status().isCreated())
+			.andReturn()
+			.getResponse().getHeader("Location");
+		
+		String[] tokens = resultURL.split("/");
+		String resultID = tokens[tokens.length - 1];
+		
+		assertEquals(ID, resultID, "Result ID is not correct");
 	}
 }
