@@ -12,13 +12,11 @@ services:
       - JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:8001
     networks:
       - testexample
-    container_name: testexample-app
       
   db:
     image: postgres:latest
     restart: always
     hostname: testexample-db
-    container_name: testexample-db
     environment:
       - POSTGRES_PASSWORD=mysecretpassword
     networks:

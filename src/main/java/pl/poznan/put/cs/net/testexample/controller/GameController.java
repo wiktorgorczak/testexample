@@ -1,8 +1,6 @@
 package pl.poznan.put.cs.net.testexample.controller;
 
-import java.net.URI;
 import java.util.List;
-import java.util.Map;
 
 import javax.validation.Valid;
 
